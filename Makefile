@@ -14,7 +14,7 @@ ALL: subdirs $(OBJECTS)
 .PHONY: ALL cpplint
 
 cpplint:
-	@python /home/stone/github/styleguide/cpplint/cpplint.py ${LINTFILE}
+	@python  ~/github/styleguide/cpplint/cpplint.py ${LINTFILE}
 
 
 
