@@ -1,0 +1,42 @@
+ver = DEBUG
+CC = g++
+
+LDFLAGS = -lm
+
+#if debug add cppunit.so for test
+ifeq ($(ver), DEBUG)
+	CFLAGS = -g -O2 -Wall -D$(ver) -Wl,-rpath=/usr/local/lib
+	LIBS = -L./lib -lcppunit -ldl
+else
+	CFLAGS = -O2 -Wall -D$(ver)
+	LIBS = 
+endif
+
+#add subdir
+.PHONY: subdirs $(SUBDIRS) cleansubdirs clean
+
+subdirs: $(SUBDIRS)
+
+$(SUBDIRS):
+	${MAKE} -C $@
+
+clean: $(cleansubdirs)
+	rm -rf $(OBJECTSPATH)
+
+cleansubdirs: 
+	@for dir in $(SUBDIRS); do \
+			${MAKE} -C dir clean; \
+	done
+
+#make sure INCLUDES and OBJPATH is defined
+%.o: %.cpp
+	@if [ ! -d $(OBJPATH) ]; then \
+		mkdir $(OBJPATH); \
+	fi
+	${CC} ${CFLAGS} ${INCLUDES} -c $^ -o ${OBJPATH}$@
+	
+%.o: %.cc
+	@if [ ! -d ${OBJPATH} ];then \
+			mkdir ${OBJPATH}; \
+	fi
+	${CC} ${CFLAGS} ${INCLUDES} -c $^ -o ${OBJPATH}$@
