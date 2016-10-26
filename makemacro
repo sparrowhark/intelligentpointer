@@ -13,19 +13,21 @@ else
 endif
 
 #add subdir
-.PHONY: subdirs $(SUBDIRS) cleansubdirs clean
+.PHONY: subdirs $(SUBDIRS) cleansubdirs cleanobj
 
 subdirs: $(SUBDIRS)
 
 $(SUBDIRS):
 	${MAKE} -C $@
 
-clean: $(cleansubdirs)
+cleanobj: cleansubdirs
 	rm -rf $(OBJECTSPATH)
 
 cleansubdirs: 
+	@echo $(SUBDIRS)
 	@for dir in $(SUBDIRS); do \
-			${MAKE} -C dir clean; \
+			echo $$dir; \
+			${MAKE} -C $$dir cleanobj; \
 	done
 
 #make sure INCLUDES and OBJPATH is defined

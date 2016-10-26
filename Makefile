@@ -1,5 +1,5 @@
-TARGET = intelligentpointer
-SUBDIRS = src
+TARGET = unixenv
+SUBDIRS = src unittest
 
 SRCS = $(wildcard *.cpp)
 OBJECTS = $(patsubst %.cpp,%.o,$(SRCS))
@@ -11,11 +11,13 @@ PATH  := "$(PATH):$(PWD)/bin:/my/other/path"
 ALL: subdirs $(OBJECTS)
 	${CC} -o ${TARGET} $$(find ${OBJPATH} -name '*.o') ${CFLAGS} ${LDFLAGS} $(LIBS) ${INCLUDES}
 
-.PHONY: ALL cpplint
+.PHONY: ALL cpplint clean
 
 cpplint:
 	@python  ~/github/styleguide/cpplint/cpplint.py ${LINTFILE}
 
+clean: cleanobj
+	rm -rf ${TARGET}
 
 
 export PROJECTPATH=$(PWD)
