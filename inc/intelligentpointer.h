@@ -9,12 +9,13 @@
  */
 #ifndef INC_INTELLIGENTPOINTER_H_
 #define INC_INTELLIGENTPOINTER_H_
+#include<stdlib.h>
 
-Template<typename T>
+template<typename T>
 class IntelligentPointer {
  private:
-    size_t *m_count;
     T *m_pt;
+    int *m_count;
 
  private:
     void ReleaseCount() {
@@ -30,14 +31,14 @@ class IntelligentPointer {
     }
 
  public:
-    explicit IntelligentPointer(T *obj = 0):m_pt(obj), m_count(new size) {
+    explicit IntelligentPointer(T *obj = 0):m_pt(obj), m_count(new int) {
         if (m_pt)
-            m_count = 1;
+            *m_count = 1;
         else
-            m_count = 0;
+            *m_count = 0;
     }
 
-    explicit IntelligentPointer(const IntelligentPoint<T> &val) {
+    explicit IntelligentPointer(const IntelligentPointer<T> &val) {
         if (this != &val) {
             m_pt = val.m_pt;
             m_count = val.m_count;
@@ -45,7 +46,7 @@ class IntelligentPointer {
         }
     }
 
-    ~IntelligentPointer() {
+    virtual ~IntelligentPointer() {
         --(*m_count);
         if (*m_count == 0) {
             delete m_count;
@@ -55,7 +56,11 @@ class IntelligentPointer {
         }
     }
 
-    IntelligentPointer& operator=(const IntelligentPoint<T> &val) {
+    operator bool() {
+      return (m_pt == NULL) ? true : false;
+    };
+
+    IntelligentPointer& operator=(const IntelligentPointer<T> &val) {
         if (this == &val) {
             return *this;
         }
